@@ -1,7 +1,7 @@
-from steam.enums import EResult
+import threading
+import time
 from steam.core.msg import MsgProto
 from steam.enums.emsg import EMsg
-from steam.enums import EPersonaState
 from steam import SteamClient
 from steam.core.cm import CMClient
 
@@ -91,7 +91,14 @@ class Bot(object):
                     print('message')
             else:
                 print('writing')
-        
+    def Stay_Online(self):
+        """
+        If you not comunicate with steam in 90 seconds, you are disconnected, 
+        so this function helps to stay connected
+        """
+        while True:
+            time.sleep(85)
+            self.Change_Status_And_Name(1, None)
     def Run(self):
         """
         Start the bot!
@@ -101,6 +108,7 @@ class Bot(object):
         self.Show_Login_Info()
         self.Change_Status_And_Name(1, None)
         self.Send_Friend_Msg(self.steam_owner_id, 'BOT ON!')
+        self.t_stay_online = threading.Thread(target=self.Stay_Online).start()
         self.Console()
 
         
