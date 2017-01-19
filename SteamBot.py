@@ -1,5 +1,4 @@
-import threading
-import time
+import gevent
 from steam.core.msg import MsgProto
 from steam.enums.emsg import EMsg
 from steam import SteamClient
@@ -61,7 +60,7 @@ class Bot(object):
         
     def Send_Friend_Request(self, friend_steam_id):
         """
-        Send a frind request to a friend!
+        Send a friend request to a friend!
         friend_steam_id type: int
         friend_steam_id example: 77777777777777777
         """
@@ -91,14 +90,17 @@ class Bot(object):
                     print('message')
             else:
                 print('writing')
+                
     def Stay_Online(self):
         """
         If you not comunicate with steam in 90 seconds, you are disconnected, 
         so this function helps to stay connected
         """
+        
         while True:
-            time.sleep(85)
             self.Change_Status_And_Name(1, None)
+            gevent.sleep(85)
+            
     def Run(self):
         """
         Start the bot!
@@ -108,7 +110,7 @@ class Bot(object):
         self.Show_Login_Info()
         self.Change_Status_And_Name(1, None)
         self.Send_Friend_Msg(self.steam_owner_id, 'BOT ON!')
-        self.t_stay_online = threading.Thread(target=self.Stay_Online).start()
+        self.t_stay_online = [gevent.spawn(self.Stay_Online)]
         self.Console()
 
         
