@@ -2,7 +2,6 @@ import gevent
 from steam.core.msg import MsgProto
 from steam.enums.emsg import EMsg
 from steam import SteamClient
-from steam.core.cm import CMClient
 
 """
 Steam libraries used here, were made by Rossen Georgiev!
@@ -110,8 +109,7 @@ class Bot(object):
         self.Show_Login_Info()
         self.Change_Status_And_Name(1, None)
         self.Send_Friend_Msg(self.steam_owner_id, 'BOT ON!')
-        self.t_stay_online = [gevent.spawn(self.Stay_Online)]
-        self.Console()
+        self.t_stay_online = [gevent.spawn(self.Stay_Online), gevent.spawn(self.Console)]
 
         
 
